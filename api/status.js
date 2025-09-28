@@ -1,10 +1,5 @@
 // api/status.js
 const BOT_URLS = [
-  { name: "Auto Cloner", url: "https://auto-the-cloner-boy.onrender.com" },
-  { name: "Auto Delete", url: "https://auto-delete.onrender.com" },
-  { name: "Auto Forward", url: "https://auto-forward.onrender.com" },
-  { name: "Auto Caption", url: "https://auto-caption-bot.onrender.com" },
-  { name: "Auto Filter", url: "https://auto-filter-bot.onrender.com" },
   { name: "User Bot 56", url: "https://webxzonebot.onrender.com" }
 ];
 
