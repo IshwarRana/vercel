@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Bot Status Dashboard</title>
+  <style>
+    body { font-family: Arial; padding: 20px; background: #f4f4f4; }
+    h1 { color: #333; }
+    ul { list-style: none; padding: 0; }
+    li { padding: 10px; margin: 5px 0; border-radius: 5px; font-weight: bold; }
+    .online { background: #d4edda; color: #155724; }
+    .offline { background: #f8d7da; color: #721c24; }
+    .error { background: #fff3cd; color: #856404; }
+  </style>
+  <meta http-equiv="refresh" content="180">
+</head>
+<body>
+  <h1>Bot Status Dashboard</h1>
+  <ul id="bot-status"></ul>
+
+  <script>
+    async function loadStatus() {
+      try {
+        const res = await fetch("/api/status");
+        const html = await res.text();
+        document.getElementById("bot-status").innerHTML = html;
+      } catch (e) {
+        document.getElementById("bot-status").innerHTML = "<li class='error'>Failed to load status</li>";
+      }
+    }
+
+    loadStatus();
+    setInterval(loadStatus, 180000); // Refresh every 3 minutes
+  </script>
+</body>
+</html>
