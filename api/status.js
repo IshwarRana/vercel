@@ -1,6 +1,4 @@
 // api/status.js
-import fetch from "node-fetch";
-
 const BOT_URLS = [
   { name: "Auto Cloner", url: "https://auto-the-cloner-boy.onrender.com" },
   { name: "Auto Delete", url: "https://auto-delete.onrender.com" },
@@ -11,30 +9,29 @@ const BOT_URLS = [
 ];
 
 export default async function handler(req, res) {
-  const results = [];
-
-  for (let bot of BOT_URLS) {
-    try {
-      const response = await fetch(bot.url, { timeout: 5000 });
-      if (response.ok) {
-        results.push({ name: bot.name, status: "Online" });
-      } else {
-        results.push({ name: bot.name, status: "Error" });
+  try {
+    const results = await Promise.all(BOT_URLS.map(async (bot) => {
+      try {
+        const response = await fetch(bot.url, { timeout: 5000 });
+        return { name: bot.name, status: response.ok ? "Online" : "Error" };
+      } catch {
+        return { name: bot.name, status: "Offline" };
       }
-    } catch (err) {
-      results.push({ name: bot.name, status: "Offline" });
+    }));
+
+    // HTML snippet
+    let html = "";
+    for (let bot of results) {
+      let cls = bot.status === "Online" ? "online" : bot.status === "Offline" ? "offline" : "error";
+      html += `<li class="${cls}">${bot.name}: ${bot.status}</li>`;
     }
-  }
 
-  // HTML snippet
-  let html = "";
-  for (let bot of results) {
-    let cls = bot.status === "Online" ? "online" : bot.status === "Offline" ? "offline" : "error";
-    html += `<li class="${cls}">${bot.name}: ${bot.status}</li>`;
+    res.status(200).send(html);
+  } catch (e) {
+    console.error(e);
+    res.status(500).send("<li class='error'>Server error occurred</li>");
   }
-
-  res.status(200).send(html);
-}      li { padding: 10px; margin: 5px 0; border-radius: 5px; font-weight: bold; }
+}}      li { padding: 10px; margin: 5px 0; border-radius: 5px; font-weight: bold; }
       .online { background: #d4edda; color: #155724; }
       .offline { background: #f8d7da; color: #721c24; }
       .error { background: #fff3cd; color: #856404; }
