@@ -1,3 +1,4 @@
+// api/status.js
 import fetch from "node-fetch";
 
 const BOT_URLS = [
@@ -6,7 +7,7 @@ const BOT_URLS = [
   { name: "Auto Forward", url: "https://auto-forward.onrender.com" },
   { name: "Auto Caption", url: "https://auto-caption-bot.onrender.com" },
   { name: "Auto Filter", url: "https://auto-filter-bot.onrender.com" },
-  { name: "web x zone", url: "https://webxzonebot.onrender.com" }
+  { name: "User Bot 56", url: "https://webxzonebot.onrender.com" }
 ];
 
 export default async function handler(req, res) {
@@ -25,16 +26,15 @@ export default async function handler(req, res) {
     }
   }
 
-  // HTML page
-  let html = `
-  <html>
-  <head>
-    <title>Bot Status Dashboard</title>
-    <style>
-      body { font-family: Arial; padding: 20px; background: #f4f4f4; }
-      h1 { color: #333; }
-      ul { list-style: none; padding: 0; }
-      li { padding: 10px; margin: 5px 0; border-radius: 5px; font-weight: bold; }
+  // HTML snippet
+  let html = "";
+  for (let bot of results) {
+    let cls = bot.status === "Online" ? "online" : bot.status === "Offline" ? "offline" : "error";
+    html += `<li class="${cls}">${bot.name}: ${bot.status}</li>`;
+  }
+
+  res.status(200).send(html);
+}      li { padding: 10px; margin: 5px 0; border-radius: 5px; font-weight: bold; }
       .online { background: #d4edda; color: #155724; }
       .offline { background: #f8d7da; color: #721c24; }
       .error { background: #fff3cd; color: #856404; }
