@@ -1,6 +1,4 @@
 // api/ping.js
-import fetch from "node-fetch";
-
 const BOT_URLS = [
   "https://auto-the-cloner-boy.onrender.com",
   "https://auto-delete.onrender.com",
@@ -11,13 +9,18 @@ const BOT_URLS = [
 ];
 
 export default async function handler(req, res) {
-  for (let url of BOT_URLS) {
-    try {
-      await fetch(url, { timeout: 5000 });
-      console.log(`✅ Pinged: ${url}`);
-    } catch (e) {
-      console.error(`❌ Failed: ${url} → ${e}`);
-    }
+  try {
+    await Promise.all(BOT_URLS.map(async (url) => {
+      try {
+        await fetch(url);
+        console.log(`✅ Pinged: ${url}`);
+      } catch (e) {
+        console.error(`❌ Failed: ${url} → ${e}`);
+      }
+    }));
+    res.status(200).json({ status: "Pinged all bots" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ status: "Server error" });
   }
-  res.status(200).json({ status: "Pinged all bots" });
 }
